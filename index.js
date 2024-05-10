@@ -31,6 +31,19 @@ async function run() {
     const allCategoryJobCollection = client
       .db("AllJobs")
       .collection("AllJobsCategory");
+    // Get All job information from database
+    app.get("/allJobsCategory", async (req, res) => {
+      const allJobsList = await allCategoryJobCollection.find().toArray();
+      res.send(allJobsList);
+    });
+    // Add job information at mongoDB
+    app.post("/allJobsCategory", async (req, res) => {
+      const jobInfo = req.body;
+      // console.log(jobInfo);
+      const result = await allCategoryJobCollection.insertOne(jobInfo);
+      res.send(result);
+    });
+
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
