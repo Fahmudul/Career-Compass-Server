@@ -88,6 +88,16 @@ async function run() {
         .toArray();
       res.send(result);
     });
+    // Delete my posted job
+    app.delete("/myPostedJobs/:id", async (req, res) => {
+      console.log(req.params.id);
+      console.log("deleted");
+    });
+    // update myposted job data
+    app.patch("/myPostedJobs/:id", async (req, res) => {
+      console.log(req.params.id);
+      console.log("updated");
+    });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
