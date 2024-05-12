@@ -81,7 +81,11 @@ async function run() {
     });
     // get applied applicants list
     app.get("/appliedApplicants", async (req, res) => {
-      const result = await appliedJobsApplicantCollection.find().toArray();
+      const email = req.query.email;
+      const filter = { email };
+      const result = await appliedJobsApplicantCollection
+        .find(filter)
+        .toArray();
       res.send(result);
     });
     console.log(
