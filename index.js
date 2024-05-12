@@ -31,10 +31,29 @@ async function run() {
     const allCategoryJobCollection = client
       .db("AllJobs")
       .collection("AllJobsCategory");
+    const appliedJobsApplicantCollection = client
+      .db("AllJobs")
+      .collection("ApplicantsList");
     // Get All job information from database
     app.get("/allJobsCategory", async (req, res) => {
       const allJobsList = await allCategoryJobCollection.find().toArray();
       res.send(allJobsList);
+    });
+    // Get single job data
+    app.get("/allJobsCategory/:id", async (req, res) => {
+      const id = req.params.id;
+      // console.log(typeof id);
+      const query = { _id: new ObjectId(id) };
+      const result = await allCategoryJobCollection.findOne(query);
+      res.send(result);
+    });
+    // Get my jobs
+    app.get("/myPostedJobs", async (req, res) => {
+      // console.log(req.query.email)
+      const email = req.query.email;
+      const filter = { ownerEmail: email };
+      const result = await allCategoryJobCollection.find(filter).toArray();
+      res.send(result);
     });
     // Add job information at mongoDB
     app.post("/allJobsCategory", async (req, res) => {
@@ -43,7 +62,28 @@ async function run() {
       const result = await allCategoryJobCollection.insertOne(jobInfo);
       res.send(result);
     });
-
+    // increase applicant number
+    app.patch("/allJobsCategory/:id", async (req, res) => {
+      const id = req.params.id;
+      // console.log(req.body);
+      const applicantInfo = req.body;
+      console.log(id);
+      const filter = { _id: new ObjectId(id) };
+      const updateDoc = {
+        $inc: {
+          applicantNumber: 1,
+        },
+      };
+      const result = allCategoryJobCollection.updateOne(filter, updateDoc);
+      const appliedApplicant =
+        appliedJobsApplicantCollection.insertOne(applicantInfo);
+      res.send(result);
+    });
+    // get applied applicants list
+    app.get("/appliedApplicants", async (req, res) => {
+      const result = await appliedJobsApplicantCollection.find().toArray();
+      res.send(result);
+    });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
