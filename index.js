@@ -79,6 +79,23 @@ async function run() {
         appliedJobsApplicantCollection.insertOne(applicantInfo);
       res.send(result);
     });
+    // update Job information
+    app.post("/allJobsCategory/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedInfo = req.body;
+      // console.log(id, updatedInfo);
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: updatedInfo,
+      };
+      const result = await allCategoryJobCollection.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
+      res.send(result);
+    });
     // get applied applicants list
     app.get("/appliedApplicants", async (req, res) => {
       const email = req.query.email;
@@ -90,8 +107,13 @@ async function run() {
     });
     // Delete my posted job
     app.delete("/myPostedJobs/:id", async (req, res) => {
-      console.log(req.params.id);
-      console.log("deleted");
+      // console.log(req.params.id);
+      // console.log("deleted");
+      const id = req.params.id
+      const filter = {_id : new ObjectId(id)}
+      const result = await allCategoryJobCollection.deleteOne(filter)
+      res.send(result)
+      
     });
     // update myposted job data
     app.patch("/myPostedJobs/:id", async (req, res) => {
