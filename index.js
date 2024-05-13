@@ -55,6 +55,13 @@ async function run() {
       const result = await allCategoryJobCollection.find(filter).toArray();
       res.send(result);
     });
+    // routes for job summary page
+    app.get("/appliedApplicantsDetails/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await appliedJobsApplicantCollection.findOne(query);
+      res.send(result);
+    });
     // Add job information at mongoDB
     app.post("/allJobsCategory", async (req, res) => {
       const jobInfo = req.body;
@@ -79,7 +86,7 @@ async function run() {
         appliedJobsApplicantCollection.insertOne(applicantInfo);
       res.send(result);
     });
-    // update Job information
+    // update myposted job data
     app.post("/allJobsCategory/:id", async (req, res) => {
       const id = req.params.id;
       const updatedInfo = req.body;
@@ -109,17 +116,12 @@ async function run() {
     app.delete("/myPostedJobs/:id", async (req, res) => {
       // console.log(req.params.id);
       // console.log("deleted");
-      const id = req.params.id
-      const filter = {_id : new ObjectId(id)}
-      const result = await allCategoryJobCollection.deleteOne(filter)
-      res.send(result)
-      
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const result = await allCategoryJobCollection.deleteOne(filter);
+      res.send(result);
     });
-    // update myposted job data
-    app.patch("/myPostedJobs/:id", async (req, res) => {
-      console.log(req.params.id);
-      console.log("updated");
-    });
+
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
