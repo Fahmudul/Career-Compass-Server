@@ -74,7 +74,7 @@ async function run() {
       const id = req.params.id;
       // console.log(req.body);
       const applicantInfo = req.body;
-      console.log(id);
+      // console.log(id);
       const filter = { _id: new ObjectId(id) };
       const updateDoc = {
         $inc: {
